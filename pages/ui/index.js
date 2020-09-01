@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import Layout from '../components/layout';
+import Layout from '../../components/layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import FilterOptions from '../components/tools/filter-options';
+import FilterOptions from '../../components/tools/filter-options';
 
 export default function Home() {
   return (
