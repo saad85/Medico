@@ -12,7 +12,7 @@ export default function Home() {
          </header>
 
           <div className="wrap">
-            <div className="search-text"><h3>Search and get Appoinment with your deired Doctor.</h3></div>
+            <div className="search-text"><h3>Search and make Appoinment with your deired Doctor.</h3></div>
              <div className="search">
                 <input type="text" className="searchTerm" placeholder="Search doctor by name"/>
                 <button type="submit" className="searchButton">
@@ -73,7 +73,7 @@ export default function Home() {
           border: 3px solid white !important;
           border-right: none;
           padding: 12px;
-          height: 55px;
+          height: 45px;
           border-radius: 30px 0 0 30px;
           outline: none;
           color: #9DBFAF;
@@ -89,7 +89,7 @@ export default function Home() {
 
         .searchButton {
           width: 50px;
-          height: 55px;
+          height: 45px;
           border: 1px solid white;
           background: #158CBA !important;
           text-align: center;
