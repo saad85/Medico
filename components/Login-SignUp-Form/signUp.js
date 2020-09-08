@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 
-export default function Login(props) {
+export default function Login() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -11,14 +12,11 @@ export default function Login(props) {
 
   function addOrLoginUser(event) {
     event.preventDefault();
-    if(email && password) createRequest(email,password);
-  }
+      console.log("name",name, "email",email,"password",password);
 
-  function setModalType(props) {
-    event.preventDefault();
-    if(props && props.onChangeModalType) props.onChangeModalType();
+      createRequest(name,email,password);
   }
-  function createRequest(email,password){
+  function createRequest(name,email,password){
     
     fetch('api/users',{
       method:'POST',
@@ -26,14 +24,24 @@ export default function Login(props) {
         'Content-Type': 'application/json',
       },
       body:  JSON.stringify({
+        name,
         email,
         password,
     })});
   }
 
   return (
-    <div className="Login">
+    <div className="signIn">
       <form onSubmit={addOrLoginUser}>
+      <FormGroup controlId="name" >
+          <FormLabel> <span className="form-text"> Name</span></FormLabel>
+          <FormControl
+            autoFocus
+            type="name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+          />
+        </FormGroup>
         <FormGroup controlId="email" >
           <FormLabel> <span className="form-text"> Email</span></FormLabel>
           <FormControl
@@ -51,11 +59,8 @@ export default function Login(props) {
             type="password"
           />
         </FormGroup>
-
-        <div className="sign-up-text"><span>Dont have account? </span><a onClick={()=>setModalType(props)}>Sign up</a></div>
-
         <Button block  type="submit" className="submit-button" >
-          Login
+          Sign in
         </Button>
       </form>
 
@@ -67,15 +72,6 @@ export default function Login(props) {
                   }
                   .submit-button{
                       font-family: 'Oswald', sans-serif;
-                  }
-                  .sign-up-text{
-                    font-family: 'Oswald', sans-serif;
-                    color:#797373;
-
-                    margin-top: -5px;
-                    margin-bottom: 6px;
-                    font-size: 12px;
-                    padding-left: 3px;
                   }
 
         `}</style>

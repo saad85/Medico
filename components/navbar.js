@@ -13,7 +13,7 @@ class navbar extends React.Component {
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary navbar-container">
         <div className="container">
-          <a className="navbar-brand logo-container" href="#"><h4>DocExplorA</h4></a>
+          <a className="navbar-brand logo-container" href="#"><h4>DocExplore</h4></a>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item nav-link">
