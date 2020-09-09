@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
+import Router from 'next/router';
+import cookie from 'js-cookie';
+import $ from 'jquery';
 
 export default function Login(props) {
   const [email, setEmail] = useState("");
@@ -14,13 +17,13 @@ export default function Login(props) {
     if(email && password) createRequest(email,password);
   }
 
-  function setModalType(props) {
+  function setModalType(props,props2) {
     event.preventDefault();
     if(props && props.onChangeModalType) props.onChangeModalType();
   }
   function createRequest(email,password){
     
-    fetch('api/users',{
+    fetch('api/users/auth',{
       method:'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +31,23 @@ export default function Login(props) {
       body:  JSON.stringify({
         email,
         password,
-    })});
+    })}) .then((r) => {
+      return r.json();
+    })
+    .then((data) => {
+
+      console.log("data ",data);
+      if (data && data.error) {
+        console.log(data.message);
+      }
+      if (data && data.token) {
+        //set cookie
+        cookie.set('token', data.token, {expires: 2});
+        Router.push('/');
+      }
+      console.log("props ",props);
+      if(props && props.closeModal) props.closeModal();
+    });;
   }
 
   return (
@@ -36,12 +55,7 @@ export default function Login(props) {
       <form onSubmit={addOrLoginUser}>
         <FormGroup controlId="email" >
           <FormLabel> <span className="form-text"> Email</span></FormLabel>
-          <FormControl
-            autoFocus
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
+          <FormControl autoFocus type="email" value={email} onChange={e => setEmail(e.target.value)}/>
         </FormGroup>
         <FormGroup controlId="password">
           <FormLabel><span className="form-text"> Password</span></FormLabel>
@@ -52,7 +66,10 @@ export default function Login(props) {
           />
         </FormGroup>
 
-        <div className="sign-up-text"><span>Dont have account? </span><a onClick={()=>setModalType(props)}>Sign up</a></div>
+        <div className="sign-up-text">
+          <span>Dont have account? </span>
+          <a onClick={()=>setModalType(props)} className="s-u-text">Sign up</a>
+        </div>
 
         <Button block  type="submit" className="submit-button" >
           Login
@@ -61,21 +78,21 @@ export default function Login(props) {
 
       <style jsx>{`
                   .form-text{
-
-                    font-family: 'Oswald', sans-serif;
                     color:#127ba3!important;
                   }
                   .submit-button{
-                      font-family: 'Oswald', sans-serif;
                   }
                   .sign-up-text{
-                    font-family: 'Oswald', sans-serif;
+                    
                     color:#797373;
 
                     margin-top: -5px;
                     margin-bottom: 6px;
                     font-size: 12px;
                     padding-left: 3px;
+                  }
+                  .s-u-text{
+                    cursor:pointer;
                   }
 
         `}</style>

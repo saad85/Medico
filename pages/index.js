@@ -6,11 +6,11 @@ import FilterOptions from '../components/tools/filter-options';
 export default function Home() {
   return (
     <div>
-      <Layout>
+      <Layout>     
           <header>
 
          </header>
-
+      
           <div className="wrap">
             <div className="search-text"><h3>Search and make Appoinment with your deired Doctor.</h3></div>
              <div className="search">
@@ -125,9 +125,12 @@ export default function Home() {
             body {
               padding: 0;
               margin: 0;
+              background-color:#FFFFFF!important;
               font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
                 Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
                 sans-serif;
+                font-family: 'Oswald', sans-serif!important;
+        
             }
 
             * {

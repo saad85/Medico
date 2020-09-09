@@ -1,11 +1,13 @@
 import { Popover ,OverlayTrigger} from 'react-bootstrap';
 import CustomModal from './Modal/modal';
+import cookie from 'js-cookie';
 
 class CustomPopover extends React.Component {
   //data
   state={
     isShowLoginModal:false,
-    date:new Date()
+    date:new Date(),
+    modalType:''
   }
   receiveChildDataAndSetState = (childData) => {
     this.setState({isShowLoginModal: childData.isShowLoginModal})
@@ -17,17 +19,25 @@ class CustomPopover extends React.Component {
   
   //methods
   showLoginModal = () =>{
-    this.setState({isShowLoginModal:true});
+    if(this.props.currentUserId) cookie.remove("token"); 
+    else  this.setState({isShowLoginModal:true});
   }
+  showSignUpModal = () =>{
+    this.setState({isShowLoginModal:true,modalType:"signUp"});
+  }
+
   render(){
     return(
       <div>
         <OverlayTrigger trigger="click" placement='bottom' key="bottom" rootClose overlay={ 
             <Popover id={`popover-positioned-bottom`}>
               <Popover.Content bsPrefix="custom-popover">
-                <div className="dropdown-option"><a href="#">Settings</a></div>
-                <div className="dropdown-option" onClick={this.showLoginModal}><a href="#">Log in</a></div>
-                <div className="dropdown-option"><a href="#">Log out</a></div>
+                <div className="dropdown-option"><span>Settings</span></div>
+                <div className="dropdown-option" onClick={this.showLoginModal}>
+                  {this.props.currentUserId ? <span>Log out</span> : <span>Log in</span>}
+                </div>
+                {!this.props.currentUserId ? <div className="dropdown-option" onClick={this.showSignUpModal}><span>Sign up</span></div> :null}
+            
               </Popover.Content>
             </Popover>}>
             
@@ -35,7 +45,7 @@ class CustomPopover extends React.Component {
         
         </OverlayTrigger>
 
-      <CustomModal show={this.state.isShowLoginModal} sendDataToParent ={this.receiveChildDataAndSetState}/>
+        <CustomModal show={this.state.isShowLoginModal}  modalType={this.state.modalType} sendDataToParent ={this.receiveChildDataAndSetState}/>
 
         <style jsx>{`
                   .dropdown-option{
@@ -43,6 +53,8 @@ class CustomPopover extends React.Component {
                       border-bottom:1px solid #e2eef3;
                       text-align: center;
                       width:100px;
+                      color:#797373;
+                      cursor:pointer;
                   }
 
                   .popover-container{

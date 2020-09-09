@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom'
 
 
 class navbar extends React.Component {
-  
 
   render(){
     return(
@@ -26,7 +25,7 @@ class navbar extends React.Component {
                 <Link href="/about"><a className="nav-link">Administrator</a></Link>
               </li>
               <li className="nav-item dropDown">
-                <CustomPopover/>
+                <CustomPopover currentUserId = {this.props.currentUserId}/>
               </li>
             </ul>
           </div>
