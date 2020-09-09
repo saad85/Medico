@@ -27,19 +27,19 @@ const client = new MongoClient(url, {
         const body = req.body,
               {name,email,password} = body;
 
-        checkValidation(name,email,password);
+        checkValidation(name,email,password,res);
         
         const connectClient = connectToClient(email,password);
 
         connectClient.then(function(db){
             console.log("Connected to client == > ");
 
-            createUser(db,name,email,password);
+            createUser(db,name,email,password,res);
         })
     }
   };
 
-  const checkValidation = (name,email,password) =>{
+  const checkValidation = (name,email,password,res) =>{
     try{
 
      
@@ -70,68 +70,52 @@ const client = new MongoClient(url, {
     });
   }
 
-  const createUser = (db,name,email,password) =>{
+  const createUser = (db,name,email,password,res) =>{
 
     const findUsers =  findUser(db,email,password);
-    
-    console.log("findUsersfindUsers ",findUsers);
         
         findUsers.then(function(users){
-
-          console.log("users == >",users);
-          console.log("users == >",users.length);
                 
             if(!users){
-
-              console.log("Not Okay >");
                  const insertUsers = createUsers(db,name,email,password, function(creationResult) {
                     if (creationResult.ops.length === 1) {
                         const user = creationResult.ops[0];
+
+                        console.log("user ",user);
+
                         const token = jwt.sign(
                         {userId: user.userId, email: user.email},
                             jwtSecret,
                             {
-                              expiresIn: 3000, //50 minutes
+                              expiresIn: 30000, //500 minutes
                             },
                         );
                     
                         res.status(200).json({token});
-                         
-                        return;
-                        }
+                      }
                     });
-
-                    insertUsers.then(function(value){
-                        console.log(value);
-                    })
                 }
             });
-
   }
 
   
 
   const findUser = (db,email,password) =>{
 
-    console.log("email,password in find ",email,password);
-
     return new Promise(function(resolve,reject){
 
         const collection = db.collection('users'),
               users = collection.findOne({email:email}) || [];
-
-              console.log("users ",users);
         
         resolve(users);
     });
   }
 
-  const createUsers = (db,name,email,password) =>{
+  const createUsers = (db,name,email,password,callback) =>{
 
     return new Promise(function(resolve, reject){
 
-        const collection = db.collection('user'),
-        hashedPassword = getHashedPassword(password);
+        const hashedPassword = getHashedPassword(password);
 
         hashedPassword.then(function(hashedPwd){
           
@@ -142,13 +126,13 @@ const client = new MongoClient(url, {
                 name,
                 email,
                 password: hashedPwd,
+                createdAt:new Date(),
+                userType:"normal_user"
               },function(err,userCreated){
-
-                console.log("userCreated",userCreated);
-
-                resolve(userCreated);
-
+                callback(userCreated);
               });
+
+              
         });
         
     });

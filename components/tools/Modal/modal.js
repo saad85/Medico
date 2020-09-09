@@ -30,14 +30,15 @@ class CustomModal extends React.Component{
     //data
     state={
         show:false,
-        modalType:'logIn'
+        modalType:''
     }
 
     //hooks
     UNSAFE_componentWillReceiveProps  = (nextProps) =>{
-        const { show } = this.props;
+        const { show ,modalType } = this.props;
 
         if (nextProps.show !== show) this.setState({ show :nextProps.show });
+        if (nextProps.modalType !== modalType) this.setState({ modalType :nextProps.modalType });
     }
 
     //methods
@@ -46,7 +47,7 @@ class CustomModal extends React.Component{
 
       this.setState({modalType:'signUp'});
     }
-    handleClose=()=>{
+    closeModal=()=>{
         this.setState({show:false});
         this.props.sendDataToParent({isShowLoginModal:false});
     }
@@ -55,18 +56,16 @@ class CustomModal extends React.Component{
         return (
             <>
         
-              <Modal show={this.state.show} onHide={this.handleClose} size="sm" >
+              <Modal show={this.state.show} onHide={this.closeModal} size="sm" >
                 
                 <Modal.Header closeButton className="custom-modal-header">
                     <ModalTitle modalType = {this.state.modalType}/>
                 </Modal.Header>
 
-              <Modal.Body> 
-                {this.state.modalType === 'signUp' ? <SignUp/> : <LoginForm onChangeModalType={this.changeModalTypeFromChild}/>}
-              </Modal.Body>
-                
-              
-                <Modal.Footer></Modal.Footer>
+                <Modal.Body> 
+                  {this.state.modalType === 'signUp' ? <SignUp closeModal={this.closeModal}/> : <LoginForm onChangeModalType={this.changeModalTypeFromChild} closeModal={this.closeModal} />}
+                </Modal.Body>
+
               </Modal>
 
               <style jsx>{`
@@ -78,7 +77,7 @@ class CustomModal extends React.Component{
                   color:#fff!important;
                 }
 
-        `}</style>
+              `}</style>
 
               
             </>
