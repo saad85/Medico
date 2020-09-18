@@ -8,20 +8,26 @@ export default function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  console.log("email ",email);
+  console.log("password ",password);
+
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
 
   function addOrLoginUser(event) {
-    event.preventDefault();
+
+    console.log("email , password",email , password)
     if(email && password) createRequest(email,password);
   }
 
   function setModalType(props,props2) {
-    event.preventDefault();
+
     if(props && props.onChangeModalType) props.onChangeModalType();
   }
   function createRequest(email,password){
+
+    console.log("email,password ",email,password);
     
     fetch('api/users/auth',{
       method:'POST',
@@ -52,18 +58,14 @@ export default function Login(props) {
 
   return (
     <div className="Login">
-      <form onSubmit={addOrLoginUser}>
+      <form >
         <FormGroup controlId="email" >
           <FormLabel> <span className="form-text"> Email</span></FormLabel>
           <FormControl autoFocus type="email" value={email} onChange={e => setEmail(e.target.value)}/>
         </FormGroup>
         <FormGroup controlId="password">
           <FormLabel><span className="form-text"> Password</span></FormLabel>
-          <FormControl
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            type="password"
-          />
+          <FormControl value={password} onChange={e => setPassword(e.target.value)} type="password"/>
         </FormGroup>
 
         <div className="sign-up-text">
@@ -71,7 +73,7 @@ export default function Login(props) {
           <a onClick={()=>setModalType(props)} className="s-u-text">Sign up</a>
         </div>
 
-        <Button block  type="submit" className="submit-button" >
+        <Button block onClick={()=>addOrLoginUser()} className="submit-button" >
           Login
         </Button>
       </form>

@@ -5,6 +5,7 @@ import useSWR from 'swr';
 let helpers = {};
 
 helpers.getCurrentUserId= function(){
+
   const {data,revalidate} = useSWR("api/users/me",async function(arg){
 
     const res = await fetch(arg);

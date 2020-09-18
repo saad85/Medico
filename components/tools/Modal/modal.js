@@ -3,6 +3,7 @@ import LoginForm from '../../Login-SignUp-Form/login'
 import SignUp from '../../Login-SignUp-Form/signUp'
 import Login from '../../Login-SignUp-Form/signUp';
 
+
 function ModalTitle(props){
 
   let title = 'Log in'; 
@@ -56,7 +57,7 @@ class CustomModal extends React.Component{
         return (
             <>
         
-              <Modal show={this.state.show} onHide={this.closeModal} size="sm" >
+              <Modal show={this.state.show} onHide={this.closeModal} size={this.props.size} >
                 
                 <Modal.Header closeButton className="custom-modal-header">
                     <ModalTitle modalType = {this.state.modalType}/>
@@ -73,8 +74,10 @@ class CustomModal extends React.Component{
                         width:50%!important
                 }
                 .custom-modal-header{
-                  background-color: #127ba3!important;
-                  color:#fff!important;
+                  background-color: #cecece2e!important;
+                }
+                .modal-header{
+                    background-color: #cecece2e!important;
                 }
 
               `}</style>
