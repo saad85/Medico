@@ -16,19 +16,6 @@ function DoctorTab(){
 
     
     useEffect(()=>{
-        console.log("call the api ==>");
-
-        getDoctors().then(async function(response){
-            console.log("response ==>",response);
-
-            let doctors= await response.json(),
-            doctorsList = doctors.doctorsList ?doctors.doctorsList : [] ;
-
-            console.log("doctorsList ==>",doctorsList);
-            setDoctors(doctorsList);
-
-
-        })
 
     },[]);
 
