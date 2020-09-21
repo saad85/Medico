@@ -12,15 +12,16 @@ const client = new MongoClient(url, {
 
 //if there is email then check for only existing doctor
 export default async function(req,res){
-    if(req.method==="GET"){
+
+    if(req.method === "GET"){
         
         const query = req.query,
-            email =query && query.email ?query.email : '' ;
+            email =query && query.email ?query.email : '' ,
+            doctorId =query && query.doctorId ?query.doctorId : '' ;
 
         connectToClient().then(function(database){
             
-            findDoctor(database,email).then(function(doctors){
-
+            findDoctor(database,email,doctorId).then(function(doctors){
                 if(doctors.length) {
                   
                     if(email)  res.status(201).json({isDoctorExists:true});  
@@ -54,9 +55,7 @@ function connectToClient(){
     })
 }
 
-function findDoctor(database,email){
-
-    
+function findDoctor(database,email,doctorId){
 
     return new Promise(function(resolve,reject){
         const DoctorsCollection = database.collection("doctors");
@@ -64,10 +63,10 @@ function findDoctor(database,email){
         let query = {};
 
         if(email) query.email = email;
+        if(doctorId) query._id = doctorId;
+
 
         let doctor = DoctorsCollection.find(query).toArray();
-
-        console.log("doctor ",doctor);
     
         doctor.then(function(result){
             resolve(result);

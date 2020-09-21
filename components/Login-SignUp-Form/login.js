@@ -8,9 +8,6 @@ export default function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  console.log("email ",email);
-  console.log("password ",password);
-
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }

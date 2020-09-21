@@ -47,7 +47,14 @@ export default function(props){
           ,"Surgeons",
           ,"ENT",
           ,"Familty Medicine"];
+
+        
           
+        useEffect(() => {
+          
+          if(props && props.value) setSelectedItem(props.value)
+          
+        }, [props.value])
 
     function liClicked(e){
 

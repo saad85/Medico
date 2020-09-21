@@ -2,14 +2,33 @@ import Layout from '../components/layout';
 import React, { useState ,useEffect} from "react";
 import DoctorsTab from './admin-doctor-tab'
 
-export default function Administrator(){
+const nodefetch = require("node-fetch");
+
+
+function getDoctors(){
+    return  new Promise(function(resolve,reject){
+
+        console.log("fetched ");
+        fetch('api/doctors/doctor-info',{
+            method:'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }}).then((doctorsInfo)=>{
+                resolve(doctorsInfo)         
+            }).catch(function(error){
+                console.log("error",error);
+            });
+    })
+}
+ function Administrator({doctorsList}){
     const [selectedTab,setSelectedTab] = useState('');
     const sideBarList = ["Dashboard","Doctors","Users","Apointments"];
+
+    let doctors = doctorsList && doctorsList.doctorsList ? doctorsList.doctorsList : []
 
     function isActive(tabName){
      return selectedTab === tabName ? true : false
     }
-
     
 
     return(
@@ -27,7 +46,7 @@ export default function Administrator(){
                             </div>
                             <div className="col-xs-12 col-sm-10 col-md-10 col-lg-10">
                                 <div className="right-section"> 
-                                    {isActive("Doctors") ? <DoctorsTab/> :null}
+                                    {isActive("Doctors") ? <DoctorsTab doctors={doctors}/> :null}
                                 </div>
                             </div>
                         </div>
@@ -77,6 +96,8 @@ export default function Administrator(){
                     border: 1px solid #d6d4d4;
                     background-color: #ffffff!important;
                     min-width: 80%;
+                    height: 65vh;
+                    
                 }
        
                 .active-tab a{
@@ -102,9 +123,21 @@ export default function Administrator(){
 
 export async function getServerSideProps(context) {
 
-    console.log("getServerSideProps")
+    let doctorsList =[]
 
-    return {
-      props: {}, // will be passed to the page component as props
-    }
-  }
+    await nodefetch('http://localhost:3000/api/doctors/doctor-info',{
+        method:'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }}).then(async (doctorsInfo)=>{
+            doctorsList = await doctorsInfo.json();
+            
+        }).catch(function(error){
+            console.log("error",error);
+        });
+
+    // Pass data to the page via props
+    return { props: {doctorsList } }
+}
+
+export default Administrator;

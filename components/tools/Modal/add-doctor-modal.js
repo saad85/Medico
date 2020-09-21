@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import { Button, FormGroup, FormControl, FormLabel,Modal } from "react-bootstrap";
 import CustomDropdown from '../../tools/dropdown';
 import AddressAutoComplete from '../../tools/address-autocomplete';
+import io from 'socket.io-client';
 
 export default function AddDoctorModal(props) {
     
@@ -19,15 +20,18 @@ export default function AddDoctorModal(props) {
         return email.length > 0 && password.length > 0;
     }
 
-    
+    console.log("props",props);
 
-    async function  addDoctor(event) {
+    async function  addDoctor(event,eventType) {
         event.preventDefault();
         setHasAllFields(true);
         
         let doctorInfo={name,email,speciality,officeLocation,officeTime};
 
+        console.log("eventType ,eventType",eventType);
+
         if(!(name&&email&&officeLocation&&officeTime)) setHasAllFields(false);
+        else if(eventType ==='editModal' && props.doctorInfo) updateDoctor(doctorInfo,eventType,props.doctorInfo._id);
         else {
            
             isDoctorExists(email).then(async function(res){
@@ -35,7 +39,10 @@ export default function AddDoctorModal(props) {
                 let response = await res.json();
 
                 if(response.isDoctorExists) setIsDoctorExist(true);
-                else insertIntoDatabase(doctorInfo);
+                else insertOrUpdateCollection(doctorInfo).then((result)=>{
+
+                    if(result && props.updateParentComponent) props.updateParentComponent()
+                });
             })
         }
     }
@@ -52,19 +59,37 @@ export default function AddDoctorModal(props) {
                 }).catch(function(error){
                     console.log("error",error);
                 });
-            })
+        })
     }
 
-    function insertIntoDatabase(doctorInfo){
-        fetch('api/doctors/add-doctors',{
-            method:'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body:  JSON.stringify(doctorInfo)}).then((data)=>{
-                setIsShow(false);
+    function insertOrUpdateCollection(doctorInfo,eventType,doctorId){
+
+        return  new Promise(function(resolve,reject){
+            fetch('api/doctors/add-doctors?eventType='+eventType+'&doctorId='+doctorId,{
+                method:'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body:  JSON.stringify(doctorInfo)}).then((data)=>{
+                    setIsShow(false);
+            }).then((doctorsInfo)=>{
+                resolve({updateDoctorsList:true})         
+            }).catch(function(error){
+                console.log("error",error);
             });
+        })
+        
     }
+
+    function updateDoctor(doctorInfo,eventType,doctorId){
+
+        insertOrUpdateCollection(doctorInfo,eventType,doctorId).then((result)=>{
+
+            if(result && props.updateParentComponent) props.updateParentComponent()
+        });
+    }
+
+
     function hideModal(){
         setIsShow(false);
 
@@ -78,30 +103,52 @@ export default function AddDoctorModal(props) {
         setSpeciality(value);
     }
 
+    function onEnterModal(){
+
+        if(props && props.doctorInfo){
+            setDoctorInfo( props.doctorInfo);
+        }
+    }
+    
+
+    function setDoctorInfo(doctorInfo){
+        const {name,email,speciality,officeLocation,officeTime} = doctorInfo;
+
+        if(name) setName(name)
+        
+        if(email) setEmail(email)
+
+        if(speciality) setSpeciality(speciality)
+        
+        if(officeLocation) setOfficeLocation(officeLocation)
+
+        if(officeTime) setOfficeTime(officeTime)
+    }
+
 
     return (
         <div>
             <div className="signIn">
-                    <Modal show={isShow} onHide={()=>hideModal()} size="md" >
+                    <Modal show={isShow} onHide={()=>hideModal()} size="md" onEnter={()=>onEnterModal()}>
                             
                         <Modal.Header closeButton >
-                            <Modal.Title><a>Add doctor</a></Modal.Title>
+                            {props.modalType==='addModal' ? <Modal.Title><a>Add doctor</a></Modal.Title> : <Modal.Title><a>Edit doctor</a></Modal.Title>}
                         </Modal.Header>
 
                         <Modal.Body> 
-                        <form onSubmit={(event)=>addDoctor(event)}>
+                        <form>
 
                             <FormGroup >
                                 
                                 <FormLabel> <span className="form-text">Doctor's name</span></FormLabel>
-                                <FormControl  type="name" onChange={e => setName(e.target.value)} style={{ color:"#5d5f5e !important",fontSize: "12px"}}/>
+                                <FormControl  type="name" value ={name} onChange={e => setName(e.target.value)} style={{ color:"#5d5f5e !important",fontSize: "12px"}}/>
 
                             </FormGroup>
 
                             <FormGroup >
                                 
                                 <FormLabel> <span className="form-text">Doctor's email</span></FormLabel>
-                                <FormControl  type="email"  onChange={e => {setEmail(e.target.value); setIsDoctorExist(false);}} style={{ color:"#5d5f5e !important",fontSize: "12px"}}/>
+                                <FormControl  type="email" value ={email}  onChange={e => {setEmail(e.target.value); setIsDoctorExist(false);}} style={{ color:"#5d5f5e !important",fontSize: "12px"}}/>
 
                                 {isDoctorExist ? <div className="error-class">Doctor already exists with this email</div>:null}
                             </FormGroup>
@@ -111,7 +158,7 @@ export default function AddDoctorModal(props) {
                                     <div className="speciality-text">
                                         <FormLabel><span className="form-text"> Speciality</span></FormLabel>
                                     </div>
-                                    <div ><CustomDropdown setParentComponent={setSelected}/></div>
+                                    <div ><CustomDropdown setParentComponent={setSelected} value={speciality}/></div>
                                 </div>
                             </FormGroup>
 
@@ -134,8 +181,11 @@ export default function AddDoctorModal(props) {
                             {!hasAllFields ? <div className="error-class">All fields are mandatory</div>:null}
 
 
-                            <div className="btn btn-primary add-doctor" onClick={(e)=>addDoctor(e)}>
-                                <span className="icon-container"><i className="fa fa-plus" aria-hidden="true"></i></span>  Add doctor
+                            <div className="btn btn-primary add-doctor" onClick={(e)=>addDoctor(e,props.modalType)}>
+                                <span className="icon-container"><i className="fa fa-plus" aria-hidden="true"></i></span> 
+                                
+                                {props.modalType==='addDoctor' ? <span>Add doctor</span> : <span>Edit doctor</span>}
+                                 
                             </div>
                             </form>
                 </Modal.Body>
