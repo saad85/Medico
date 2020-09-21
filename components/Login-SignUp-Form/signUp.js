@@ -14,10 +14,9 @@ export default function Login(props) {
   }
 
   function addOrLoginUser(event) {
-    event.preventDefault();
-      console.log("toastr",toastr);
 
-      createRequest(name,email,password);
+    console.log("name,email,password v",name,email,password);
+    createRequest(name,email,password);
   }
   function createRequest(name,email,password){
     
@@ -41,7 +40,7 @@ export default function Login(props) {
     <div>
       <div className="signIn">
 
-        <form onSubmit={addOrLoginUser}>
+        <form onSubmit={()=>addOrLoginUser()}>
 
           <FormGroup controlId="name" >
               
@@ -63,7 +62,7 @@ export default function Login(props) {
               <FormControl value={password} onChange={e => setPassword(e.target.value)} type="password"/>
           
           </FormGroup>
-            <Button block  type="submit" className="submit-button" >
+            <Button block  onClick={()=>addOrLoginUser()} className="submit-button" >
               Sign in
             </Button>
         </form>

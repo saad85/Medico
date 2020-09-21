@@ -32,11 +32,11 @@ class CustomPopover extends React.Component {
         <OverlayTrigger trigger="click" placement='bottom' key="bottom" rootClose overlay={ 
             <Popover id={`popover-positioned-bottom`}>
               <Popover.Content bsPrefix="custom-popover">
-                <div className="dropdown-option"><span>Settings</span></div>
+                <div className="dropdown-option"><a>Settings</a></div>
                 <div className="dropdown-option" onClick={this.showLoginModal}>
-                  {this.props.currentUserId ? <span>Log out</span> : <span>Log in</span>}
+                  {this.props.currentUserId ? <a>Log out</a> : <a>Log in</a>}
                 </div>
-                {!this.props.currentUserId ? <div className="dropdown-option" onClick={this.showSignUpModal}><span>Sign up</span></div> :null}
+                {!this.props.currentUserId ? <div className="dropdown-option" onClick={this.showSignUpModal}><a>Sign up</a></div> :null}
             
               </Popover.Content>
             </Popover>}>
@@ -45,9 +45,12 @@ class CustomPopover extends React.Component {
         
         </OverlayTrigger>
 
-        <CustomModal show={this.state.isShowLoginModal}  modalType={this.state.modalType} sendDataToParent ={this.receiveChildDataAndSetState}/>
+        <CustomModal show={this.state.isShowLoginModal}  modalType={this.state.modalType} sendDataToParent ={this.receiveChildDataAndSetState} size ="sm"/>
 
         <style jsx>{`
+                  a{
+                    color:#74797b!important;
+                  }
                   .dropdown-option{
                       padding:5px;
                       border-bottom:1px solid #e2eef3;
@@ -55,6 +58,9 @@ class CustomPopover extends React.Component {
                       width:100px;
                       color:#797373;
                       cursor:pointer;
+                      line-height: 2.5;
+                      font-size: 11px;
+                      font-weight: bold;
                   }
 
                   .popover-container{

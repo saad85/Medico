@@ -6,25 +6,32 @@ import ReactDOM from 'react-dom'
 
 
 class navbar extends React.Component {
+  setActiveNavBar =function(e){
+    e.preventDefault();
+
+    let target = e.target;
+
+
+  }
 
   render(){
     return(
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary navbar-container">
         <div className="container">
-          <a className="navbar-brand logo-container" href="#"><h4>DocExplore</h4></a>
+          <a className="navbar-brand logo-container" href="#"><h4>Medico</h4></a>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item nav-link">
+              <li id="home" className="nav-item nav-link" onClick={this.setActiveNavBar}>
                 <Link href="/"><a className="nav-link">Home</a></Link>
               </li>
-              <li className="nav-item nav-link">
+              <li className="nav-item nav-link" onClick={this.setActiveNavBar}>
                 <Link href="/ui/about"><a className="nav-link">About</a></Link>
               </li>
-              <li className="nav-item nav-link">
-                <Link href="/about"><a className="nav-link">Administrator</a></Link>
+              <li className="nav-item nav-link" onClick={this.setActiveNavBar}>
+                <Link href="/administrator"><a className="nav-link">Administrator</a></Link>
               </li>
-              <li className="nav-item dropDown">
+              <li className="nav-item dropDown" onClick={this.setActiveNavBar}>
                 <CustomPopover currentUserId = {this.props.currentUserId}/>
               </li>
             </ul>
@@ -40,14 +47,14 @@ class navbar extends React.Component {
           }
 
           .dropDown{
-            margin-top: 2px;
+            margin-top: 16px;
             cursor:pointer;
             color: #127ba3!important;
           }
 
           .nav-link{
             margin-right:6px;
-            padding:0px;
+            padding: 8px;
           }
           
           .logo{
@@ -60,6 +67,11 @@ class navbar extends React.Component {
           }
           .navbar-container{
             background:white!important;
+          }
+
+          .active{
+            background-color: #127ba3!important;
+            color:white!important;
           }
 
         `}</style>

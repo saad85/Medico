@@ -1,0 +1,21 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background-color:#cecece2e!important;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif;
+    font-family: 'Oswald', sans-serif!important;
+    width:100vw;
+
+}
+.error-class{
+  color: red;
+  margin: 2px 4px;
+  font-size: 11px;
+}
+
+* {
+  box-sizing: border-box;
+}

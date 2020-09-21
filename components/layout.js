@@ -4,18 +4,12 @@ import Navbar from './navbar';
 import CommonHelpers from '../pages/helpers/helper'
 
 const layout = (props) =>{
-
+  
   let helpers = CommonHelpers() || null ,
-      currentUserId = helpers.getCurrentUserId() || null;
+      currentUserId =helpers.getCurrentUserId() || null;
 
       return (
         <div>
-       
-          <Head>
-            <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/lumen/bootstrap.min.css" rel='stylesheet'/>
-            <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"/>
-            <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Mukta:wght@300;600&display=swap" rel="stylesheet"/>
-          </Head>
        
           <Navbar currentUserId={currentUserId}/>
        
