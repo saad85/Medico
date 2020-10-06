@@ -9,18 +9,14 @@ function ModalTitle(props){
   let title = 'Log in'; 
   if(props.modalType === 'signUp') title = 'Sign Up'; 
 
-  return <Modal.Title><a>{title}</a></Modal.Title>
+  return <Modal.Title>{title}</Modal.Title>
 }
 
 function ModalBody(props){
 
-  console.log("modalType ",props)
-
   let bodyComponent = <LoginForm />;
 
   if(props.modalType === 'signUp') bodyComponent = <SignUp/>
-
-  console.log("bodyComponent ",bodyComponent)
                 
   return <Modal.Body>{bodyComponent} </Modal.Body>
 }
@@ -31,26 +27,39 @@ class CustomModal extends React.Component{
     //data
     state={
         show:false,
-        modalType:''
+        modalType:'',
+        context:'',
+        doctorInfo:{}
     }
 
     //hooks
     UNSAFE_componentWillReceiveProps  = (nextProps) =>{
-        const { show ,modalType } = this.props;
+        const { show ,modalType,appointmentPropsData } = this.props;
+        const doctorInfo =  appointmentPropsData && appointmentPropsData.doctorInfo ?appointmentPropsData.doctorInfo : null ;
 
-        if (nextProps.show !== show) this.setState({ show :nextProps.show });
+        if (nextProps.show !==show) this.setState({ show :nextProps.show });
         if (nextProps.modalType !== modalType) this.setState({ modalType :nextProps.modalType });
+        if (nextProps.appointmentPropsData &&  nextProps.appointmentPropsData.doctorInfo) this.setState({ doctorInfo :nextProps.appointmentPropsData.doctorInfo });
+        if (nextProps.appointmentPropsData &&  nextProps.appointmentPropsData.context) this.setState({context:nextProps.appointmentPropsData.context});
     }
 
     //methods
     changeModalTypeFromChild =(props) =>{
-      console.log(props);
-
       this.setState({modalType:'signUp'});
     }
-    closeModal=()=>{
-        this.setState({show:false});
-        this.props.sendDataToParent({isShowLoginModal:false});
+    closeModal=(isShowLoginModalAgain)=>{
+      this.setState({show:false}); 
+      if(isShowLoginModalAgain) {
+        this.setState({modalType:'login'});
+        this.setState({show:true});
+
+        isShowLoginModalAgain =false;
+        
+      } 
+
+      console.log("this.state.show",this.state.show);
+    
+      if(this.props && this.props.sendDataToParent) this.props.sendDataToParent({isShowLoginModal:false});
     }
 
     render(){
@@ -64,7 +73,21 @@ class CustomModal extends React.Component{
                 </Modal.Header>
 
                 <Modal.Body> 
-                  {this.state.modalType === 'signUp' ? <SignUp closeModal={this.closeModal}/> : <LoginForm onChangeModalType={this.changeModalTypeFromChild} closeModal={this.closeModal} />}
+                  {this.state.modalType === 'signUp' ? 
+                  
+                  <SignUp 
+                    closeModal={this.closeModal} 
+                    showAppointmentModal={this.props.showAppointmentModal}
+                    setCurrentUserId={this.props.setCurrentUserId}/> : 
+
+                  <LoginForm 
+                    context={this.state.context}
+                    reloadPage={this.props.reloadPage}
+                    onChangeModalType={this.changeModalTypeFromChild} 
+                    closeModal={this.closeModal} 
+                    showAppointmentModal={this.props.showAppointmentModal} 
+                    setCurrentUserId={this.props.setCurrentUserId}/>}
+
                 </Modal.Body>
 
               </Modal>

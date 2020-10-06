@@ -96,23 +96,16 @@ function getDoctors(){
                     border: 1px solid #d6d4d4;
                     background-color: #ffffff!important;
                     min-width: 80%;
-                    height: 65vh;
+                    height: 70vh;
                     
                 }
        
                 .active-tab a{
-                    color: #127ba3!important;
+                    //color: #127ba3!important;
                 }
                 .active-tab {
                     background-color: #cecece2e;
                 }
-                .test{
-                    background-color: #cecece2e!important;
-                    min-width: 25px;
-                    border-radius: 35px;
-                    padding: 15px;
-                    margin: 15px;
-                }    
 
             `}</style>
             

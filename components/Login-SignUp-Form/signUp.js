@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import toastr from 'toastr';
+import Router from 'next/router';
+import cookie from 'js-cookie';
 
 export default function Login(props) {
   const [name, setName] = useState("");
@@ -29,10 +31,17 @@ export default function Login(props) {
         name,
         email,
         password,
-    })}).then((data)=>{
+    })}).then(async(response)=>{
 
-      console.log("props ",props);
-      if(props && props.closeModal) props.closeModal();
+      let data = await response.json();
+      
+      console.log("data ",data)
+      console.log("props ",props)
+
+      cookie.set('token', data.token, {expires: 20});
+      Router.push('/');
+      if(props && props.closeModal) props.closeModal(true);
+      //if(props && props.showAppointmentModal) props.showAppointmentModal({},true,data.userId);
     });
   }
 
@@ -71,7 +80,7 @@ export default function Login(props) {
                     .form-text{
 
                       font-family: 'Oswald', sans-serif;
-                      color:#127ba3!important;
+                      // color:#127ba3!important;
                     }
                     .submit-button{
                         font-family: 'Oswald', sans-serif;
