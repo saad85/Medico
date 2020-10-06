@@ -4,7 +4,6 @@ import { Button ,OverlayTrigger,Popover} from 'react-bootstrap';
 import CustomPopover from '../components/tools/popover';
 import ReactDOM from 'react-dom'
 
-
 class navbar extends React.Component {
   setActiveNavBar =function(e){
     e.preventDefault();
@@ -28,11 +27,11 @@ class navbar extends React.Component {
               <li className="nav-item nav-link" onClick={this.setActiveNavBar}>
                 <Link href="/ui/about"><a className="nav-link">About</a></Link>
               </li>
-              <li className="nav-item nav-link" onClick={this.setActiveNavBar}>
+              <li id ="naer" className="nav-item nav-link" onClick={this.setActiveNavBar}>
                 <Link href="/administrator"><a className="nav-link">Administrator</a></Link>
               </li>
               <li className="nav-item dropDown" onClick={this.setActiveNavBar}>
-                <CustomPopover currentUserId = {this.props.currentUserId}/>
+                <CustomPopover currentUserId = {this.props.currentUserId} setCurrentUserId={this.props.setCurrentUserId}/>
               </li>
             </ul>
           </div>
@@ -64,9 +63,13 @@ class navbar extends React.Component {
 
           .logo-container{
             display:content!important;
+            margin-left:-2px;
           }
           .navbar-container{
+            border-width: 0 0px 4px 1px!important;
             background:white!important;
+            width: 100%;
+            z-index: 111;
           }
 
           .active{

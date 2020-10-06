@@ -2,12 +2,14 @@ import { Popover ,OverlayTrigger} from 'react-bootstrap';
 import CustomModal from './Modal/modal';
 import cookie from 'js-cookie';
 
+
 class CustomPopover extends React.Component {
   //data
   state={
     isShowLoginModal:false,
     date:new Date(),
-    modalType:''
+    modalType:'',
+    show:false
   }
   receiveChildDataAndSetState = (childData) => {
     this.setState({isShowLoginModal: childData.isShowLoginModal})
@@ -18,20 +20,36 @@ class CustomPopover extends React.Component {
   }
   
   //methods
+
+  hidePopOver = ()=>{
+    if(typeof window !=='undefined' &&  document.getElementsByClassName("fade show popover bs-popover-bottom")) document.getElementsByClassName("fade show popover bs-popover-bottom")[0].style.display = "none";
+  }
   showLoginModal = () =>{
-    if(this.props.currentUserId) cookie.remove("token"); 
-    else  this.setState({isShowLoginModal:true});
+
+    this.hidePopOver();
+    
+    this.setState({show:false});
+
+    if(this.props.currentUserId) {
+      cookie.remove("token"); 
+      location.reload(); 
+    
+    }
+    else this.setState({isShowLoginModal:true});
   }
   showSignUpModal = () =>{
+    this.hidePopOver();
+
     this.setState({isShowLoginModal:true,modalType:"signUp"});
   }
 
   render(){
     return(
       <div>
+        
         <OverlayTrigger trigger="click" placement='bottom' key="bottom" rootClose overlay={ 
-            <Popover id={`popover-positioned-bottom`}>
-              <Popover.Content bsPrefix="custom-popover">
+            <Popover id={`popover-positioned-bottom`}   bsPrefix="popover">
+              <Popover.Content    bsPrefix="custom-popover">
                 <div className="dropdown-option"><a>Settings</a></div>
                 <div className="dropdown-option" onClick={this.showLoginModal}>
                   {this.props.currentUserId ? <a>Log out</a> : <a>Log in</a>}
@@ -41,11 +59,17 @@ class CustomPopover extends React.Component {
               </Popover.Content>
             </Popover>}>
             
-            <i className="fa fa-caret-down" onClick={this.addPopoverClass}></i>
+            <i className="fa fa-caret-down" ></i>
         
         </OverlayTrigger>
 
-        <CustomModal show={this.state.isShowLoginModal}  modalType={this.state.modalType} sendDataToParent ={this.receiveChildDataAndSetState} size ="sm"/>
+        <CustomModal 
+          context = "popover"
+          show={this.state.isShowLoginModal}  
+          modalType={this.state.modalType} 
+          sendDataToParent ={this.receiveChildDataAndSetState} 
+          setCurrentUserId={this.props.setCurrentUserId}
+          size ="sm"/>
 
         <style jsx>{`
                   a{

@@ -74,7 +74,7 @@ const client = new MongoClient(url, {
             
                 let token = setJsonWebToken(user);
 
-                res.status(200).json({token});
+                res.status(200).json({token,userId:user._id});
               
             } else res.status(401).json({error: true, message: 'Auth Failed'});
             });

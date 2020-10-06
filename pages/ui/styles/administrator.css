@@ -46,10 +46,3 @@ li:hover {
 .active-tab {
     background-color: #cecece2e;
 }
-.test{
-    background-color: #cecece2e!important;
-    min-width: 25px;
-    border-radius: 35px;
-    padding: 15px;
-    margin: 15px;
-} 

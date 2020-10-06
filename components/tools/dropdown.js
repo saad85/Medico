@@ -88,6 +88,7 @@ export default function(props){
                     marfin-left: 50px!important;
                     color: #5d5f5e!important;
                     font-size: 12px;
+                    border-radius: 5px;
                   }
                   .dropdown-icon{
                     float: right;

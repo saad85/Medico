@@ -35,19 +35,16 @@ function DoctorTab({doctors}){
     function showLoginModal(value){
         setIsShowLoginModal(value);
         setModalType('addDoctor');
-
-        console.log("modalType asdf",modalType);
     }
 
     function showEditDoctorModal(doctorInfo){
         setModalType('editModal');
-        showLoginModal(true);
+        setIsShowLoginModal(true);
         setSelectedDoctorInfo(doctorInfo)
     }
 
     useEffect(()=>{
         updateDoctorsList();
-        console.log("useEffect");
     },[]) 
     
    
@@ -146,7 +143,7 @@ function DoctorTab({doctors}){
                     }
                     .doctors{
                         overflow-y:scroll;
-                        height: 55vh;
+                        height: 58vh;
                     }
                     .doctor-block{
                         background-color: #cecece2e!important;
@@ -154,6 +151,9 @@ function DoctorTab({doctors}){
                         border-radius: 15px;
                         padding: 15px;
                         margin: 15px;
+                    }
+                    .doctor-block:hover .edit-delete-container {
+                        display:block;
                     }
                     .doctors-row{
                         margin-bottom:5px;
@@ -172,11 +172,12 @@ function DoctorTab({doctors}){
                         float: right;
                         margin-top: -30px;
                         margin-right: 2px;
+                        display:none;
                     }
                     .edit-doctor{
                         margin:2px;
                         font-weight:300!important;
-                        font-size:10px!important
+                        font-size:10px!important;
                     }
                     .delete-doctor{
                         margin:2px;

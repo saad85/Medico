@@ -1,17 +1,34 @@
 
 import Head from 'next/head';
 import Navbar from './navbar';
-import CommonHelpers from '../pages/helpers/helper'
+import CommonHelpers from '../pages/helpers/helper';
+import React, { useState,useEffect } from "react";
+
 
 const layout = (props) =>{
   
+  const [userId,setUserId] = useState(null);
+  
   let helpers = CommonHelpers() || null ,
-      currentUserId =helpers.getCurrentUserId() || null;
+  currentUserId = helpers.getCurrentUserId() || '';
+
+  function setCurrentUserId(userId){
+
+    console.log("user Id in setCurrentUserId ",userId);
+    if(userId) setUserId(userId);
+  }
+
+    useEffect(() => {
+      setCurrentUserId(currentUserId);
+      return () => {
+        
+      }
+    }, [])
 
       return (
         <div>
        
-          <Navbar currentUserId={currentUserId}/>
+          <Navbar currentUserId={currentUserId} setCurrentUserId={setCurrentUserId}/>
        
           <div>
              {props.children}

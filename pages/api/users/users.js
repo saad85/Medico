@@ -89,7 +89,7 @@ const createUser = (db,name,email,password,res) =>{
 
           const token = jwt.sign({userId: user.userId, email: user.email},jwtSecret,{expiresIn: 300000});
                       
-          res.status(200).json({token});
+          res.status(200).json({token,userId:user._id});
         }
       });
     }
@@ -120,7 +120,6 @@ const createUser = (db,name,email,password,res) =>{
             const UsersCollection= db.collection('users');
 
             UsersCollection.insertOne( {
-                userId: uuidv4(),
                 name,
                 email,
                 password: hashedPwd,
